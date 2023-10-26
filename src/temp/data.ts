@@ -21,7 +21,7 @@ export const DUMMY_BUSINESSES: Array<IBusiness> = [
             { name: 'John Doe Coo', dateOfBirth: new Date('05/05/1983'), phoneNumber: '+381 69535353', role: 'COO', salary: 360_000 },
             { name: 'John Doe', dateOfBirth: new Date('05/09/1989'), phoneNumber: '+381 3240423', role: 'Janitor', salary: 34_000 },
             { name: 'Jane Doe', dateOfBirth: new Date('09/02/1991'), phoneNumber: '+381 4848000', role: 'Junior Software Developer', salary: 90_000 },
-            { name: 'Janas Doesi', dateOfBirth: new Date('21/08/1994'), phoneNumber: '+381 3232322', role: 'Medior Software Developer', salary: 130_000 }
+            { name: 'Janas Doesi', dateOfBirth: new Date('08/21/1994'), phoneNumber: '+381 3232322', role: 'Medior Software Developer', salary: 130_000 }
         ]
     }
 ]

@@ -31,4 +31,8 @@ export class DashboardComponent {
       }
     });
   }
+
+  viewBusiness(business: IBusiness) {
+    this.router.navigate(['business', business.id]);
+  }
 }
