@@ -1,0 +1,25 @@
+<form (submit)="addBusiness()" [formGroup]="form">
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Business name</mat-label>
+            <input matInput placeholder="Business name" formControlName="businessName">
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="form.controls.businessName.hasError('required')">
+                Field required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Business address</mat-label>
+            <input matInput placeholder="Business address" formControlName="businessAddress">
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="form.controls.businessAddress.hasError('required')">
+                Field required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <button mat-raised-button color="primary">Submit</button>
+    </div>
+</form>
