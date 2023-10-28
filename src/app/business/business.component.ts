@@ -37,8 +37,6 @@ export class BusinessComponent implements OnInit, OnDestroy {
 
   openAddEmployeeForm() {
       this.dialog.open(AddEmployeeComponent, {
-        height: '500px',
-        width: '400px',
         data: this.business
       });
   }

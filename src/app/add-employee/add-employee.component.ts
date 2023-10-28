@@ -9,13 +9,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { BusinessService } from '../services/business.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IBusiness, IEmployee } from '../services/business.interface';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule]
+  imports: [CommonModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule]
 })
 export class AddEmployeeComponent {
   form = new FormGroup({

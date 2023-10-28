@@ -5,7 +5,7 @@
             <mat-icon>add</mat-icon> Add employee
         </button>
     </div>
-    <div *ngIf="business.employees.length > 0">
+    <div>
         <table mat-table [dataSource]="business.employees" class="mat-elevation-z8">
     
             <ng-container matColumnDef="name">
