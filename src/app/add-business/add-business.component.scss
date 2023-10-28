@@ -1,0 +1,16 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    padding: 16px;
+    border: 2px solid grey;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px grey;
+}
+
+.form-controls {
+    display: flex;
+    justify-content: center;
+}

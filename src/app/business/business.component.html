@@ -1,12 +1,11 @@
-<div *ngIf="business">
+<div class="container" *ngIf="business">
+    <h2> {{ business.name }} </h2>
     <div>
         <button mat-button color="primary" (click)="openAddEmployeeForm()">
             <mat-icon>add</mat-icon> Add employee
         </button>
     </div>
-    <h4 *ngIf="business.employees.length === 0"> No employees </h4>
     <div *ngIf="business.employees.length > 0">
-        <h4 >Employees</h4>
         <table mat-table [dataSource]="business.employees" class="mat-elevation-z8">
     
             <ng-container matColumnDef="name">

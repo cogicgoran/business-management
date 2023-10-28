@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+.table-row:hover {
+    cursor: pointer;
+    box-shadow: 0 0 4px grey;
+}
