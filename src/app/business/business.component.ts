@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BusinessService } from '../services/business.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { IBusiness } from '../services/business.interface';
+import { IBusiness, IEmployee } from '../services/business.interface';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +23,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class BusinessComponent implements OnInit, OnDestroy {
   urlBusinessId!: string;
   routerSubscription!: Subscription;
-  displayedColumns = ['name', 'dateOfBirth', 'role', 'phone', 'salary'];
+  displayedColumns = ['name', 'dateOfBirth', 'role', 'phone', 'salary', 'delete'];
   business: IBusiness | undefined;
   showAddEmployeeForm = false;
 
@@ -39,6 +39,10 @@ export class BusinessComponent implements OnInit, OnDestroy {
       this.dialog.open(AddEmployeeComponent, {
         data: this.business
       });
+  }
+
+  removeEmployee(businessId: IBusiness['id'], employeeId: IEmployee['id']) {
+      this.businessService.removeEmployee(businessId, employeeId);
   }
 
   ngOnDestroy(): void {
