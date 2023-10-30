@@ -35,10 +35,21 @@
             <div class="pagination">
                 <button (click)="firstPage()" mat-icon-button><mat-icon>first_page</mat-icon></button>
                 <button (click)="prevPage()" mat-icon-button><mat-icon>chevron_left</mat-icon></button>
-                <button  mat-icon-button>{{ currentPage }}</button>
+                <button mat-icon-button>{{ currentPage }}</button>
                 <!-- <span>{{ currentPage }}</span> -->
                 <button (click)="nextPage()" mat-icon-button><mat-icon>chevron_right</mat-icon></button>
                 <button (click)="lastPage()" mat-icon-button><mat-icon>last_page</mat-icon></button>
+                <div class="pagination-select">
+                    <span>
+                        Items per page:
+                    </span>
+                    <mat-select (valueChange)="itemsPerPageChangeHandler($event)" [(value)]="itemsPerPage">
+                        <mat-option *ngFor="let itemCountPerPage of itemCountPerPageOptions"
+                            [value]="itemCountPerPage.value">
+                            {{itemCountPerPage.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </div>
             </div>
         </div>
     </div>

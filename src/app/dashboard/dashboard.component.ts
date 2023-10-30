@@ -1,7 +1,8 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { BusinessService } from '../services/business.service';
 import { IBusiness } from '../services/business.interface';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterModule } from '@angular/router';
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
-  imports: [RouterModule, CommonModule, MatTableModule, MatButtonModule, MatIconModule, DatePipe, CurrencyPipe]
+  imports: [RouterModule, CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatSelectModule, DatePipe, CurrencyPipe]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'numberOfEmployees', 'delete'];
@@ -24,9 +25,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }>
   subscription!: Subscription;
   currentPage = 1;
-  articlesPerPage = 3;
   totalPages = 1;
   businessesCount = 0;
+  itemCountPerPageOptions = [
+    { value: 5, viewValue: '5' },
+    { value: 10, viewValue: '10' },
+  ];
+  itemsPerPage = this.itemCountPerPageOptions[0].value;
 
 
   constructor(private businessService: BusinessService, private router: Router) { }
@@ -34,10 +39,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.businessService.myBusinessObservable.subscribe((businesses) => {
       this.businessesCount = businesses.length;
-      this.totalPages = Math.ceil(this.businessesCount / this.articlesPerPage) || 1;
-      if(this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+      this.totalPages = Math.ceil(this.businessesCount / this.itemsPerPage) || 1;
+      if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
       this.businesses = businesses
-        .slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
+        .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
         .map((business) => {
           return {
             id: business.id,
@@ -51,53 +56,69 @@ export class DashboardComponent implements OnInit, OnDestroy {
   nextPage() {
     if (this.currentPage === this.totalPages) return;
     this.currentPage = this.currentPage + 1;
-    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
-    .map((business) => {
-      return {
-        id: business.id,
-        name: business.name,
-        numberOfEmployees: business.employees.length
-      }
-    });
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      .map((business) => {
+        return {
+          id: business.id,
+          name: business.name,
+          numberOfEmployees: business.employees.length
+        }
+      });
+  }
+
+  itemsPerPageChangeHandler(value: number) {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
+    this.businessesCount = this.businessService.myBusinesses.value.length;
+    this.totalPages = Math.ceil(this.businessesCount / this.itemsPerPage) || 1;
+      
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      .map((business) => {
+        return {
+          id: business.id,
+          name: business.name,
+          numberOfEmployees: business.employees.length
+        }
+      });
   }
 
   prevPage() {
     if (this.currentPage === 1) return;
     this.currentPage = this.currentPage - 1;
-    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
-    .map((business) => {
-      return {
-        id: business.id,
-        name: business.name,
-        numberOfEmployees: business.employees.length
-      }
-    });
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      .map((business) => {
+        return {
+          id: business.id,
+          name: business.name,
+          numberOfEmployees: business.employees.length
+        }
+      });
   }
 
   firstPage() {
     if (this.currentPage === 1) return;
     this.currentPage = 1;
-    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
-    .map((business) => {
-      return {
-        id: business.id,
-        name: business.name,
-        numberOfEmployees: business.employees.length
-      }
-    });
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      .map((business) => {
+        return {
+          id: business.id,
+          name: business.name,
+          numberOfEmployees: business.employees.length
+        }
+      });
   }
 
   lastPage() {
     if (this.currentPage === this.totalPages) return;
     this.currentPage = this.totalPages;
-    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
-    .map((business) => {
-      return {
-        id: business.id,
-        name: business.name,
-        numberOfEmployees: business.employees.length
-      }
-    });
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage)
+      .map((business) => {
+        return {
+          id: business.id,
+          name: business.name,
+          numberOfEmployees: business.employees.length
+        }
+      });
   }
 
   ngOnDestroy(): void {
