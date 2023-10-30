@@ -32,6 +32,12 @@
                 <tr class="table-row" mat-row *matRowDef="let row; columns: displayedColumns;"
                     (click)="viewBusiness(row)"></tr>
             </table>
+            <div class="pagination">
+                <button (click)="prevPage()" mat-icon-button><mat-icon>chevron_left</mat-icon></button>
+                <button  mat-icon-button>{{ currentPage }}</button>
+                <!-- <span>{{ currentPage }}</span> -->
+                <button (click)="nextPage()" mat-icon-button><mat-icon>chevron_right</mat-icon></button>
+            </div>
         </div>
     </div>
     <div>

@@ -13,3 +13,9 @@ h1 {
     cursor: pointer;
     box-shadow: 0 0 4px grey;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}

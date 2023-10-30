@@ -4,7 +4,7 @@
             <mat-form-field appearance="fill">
                 <mat-label>Business name</mat-label>
                 <input matInput placeholder="Business name" formControlName="businessName">
-                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-icon matSuffix>business</mat-icon>
                 <mat-error *ngIf="form.controls.businessName.hasError('required')">
                     Field required
                 </mat-error>
@@ -14,7 +14,7 @@
             <mat-form-field appearance="fill">
                 <mat-label>Business address</mat-label>
                 <input matInput placeholder="Business address" formControlName="businessAddress">
-                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                <mat-icon matSuffix>location_on</mat-icon>
                 <mat-error *ngIf="form.controls.businessAddress.hasError('required')">
                     Field required
                 </mat-error>
