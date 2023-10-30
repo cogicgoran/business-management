@@ -6,7 +6,7 @@
         </button>
     </div>
     <div>
-        <table mat-table [dataSource]="business.employees" class="mat-elevation-z8">
+        <table mat-table [dataSource]="employees" class="mat-elevation-z8">
 
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Employee Name </th>
@@ -45,6 +45,23 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-
+        <div class="pagination">
+            <button (click)="firstPage()" mat-icon-button><mat-icon>first_page</mat-icon></button>
+            <button (click)="prevPage()" mat-icon-button><mat-icon>chevron_left</mat-icon></button>
+            <button mat-icon-button>{{ currentPage }}</button>
+            <button (click)="nextPage()" mat-icon-button><mat-icon>chevron_right</mat-icon></button>
+            <button (click)="lastPage()" mat-icon-button><mat-icon>last_page</mat-icon></button>
+            <div class="pagination-select">
+                <span>
+                    Items per page:
+                </span>
+                <mat-select (valueChange)="itemsPerPageChangeHandler($event)" [(value)]="itemsPerPage">
+                    <mat-option *ngFor="let itemCountPerPage of itemCountPerPageOptions"
+                        [value]="itemCountPerPage.value">
+                        {{itemCountPerPage.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </div>
+        </div>
     </div>
 </div>

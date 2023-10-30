@@ -11,13 +11,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-business',
   templateUrl: './business.component.html',
   styleUrls: ['./business.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, DatePipe, CurrencyPipe, MatNativeDateModule, MatDatepickerModule],
+  imports: [CommonModule, MatSelectModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, DatePipe, CurrencyPipe, MatNativeDateModule, MatDatepickerModule],
   providers: [MatDatepickerModule]
 })
 export class BusinessComponent implements OnInit, OnDestroy {
@@ -28,6 +29,15 @@ export class BusinessComponent implements OnInit, OnDestroy {
   showAddEmployeeForm = false;
   businessesSubscription!: Subscription;
   businessId: string | null = null;
+  currentPage = 1;
+  itemCountPerPageOptions = [
+    { value: 5, viewValue: '5' },
+    { value: 10, viewValue: '10' },
+  ];
+  itemsPerPage = this.itemCountPerPageOptions[0].value;
+  employeeCount = 0;
+  totalPages = 1;
+  employees: Array<IEmployee> = [];
 
   constructor(private businessService: BusinessService, private route: ActivatedRoute, public dialog: MatDialog) { }
 
@@ -37,9 +47,50 @@ export class BusinessComponent implements OnInit, OnDestroy {
     });
     this.businessesSubscription = this.businessService.myBusinessObservable.subscribe((data) => {
       this.business = this.businessService.getBusiness(data, this.businessId!);
+      this.employeeCount = this.business?.employees.length ?? 0;
+      this.totalPages = Math.ceil(this.employeeCount / this.itemsPerPage) || 1;
+      if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+      this.employees = this.business?.employees
+        .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
     })
   }
 
+  firstPage() {
+    if (this.currentPage === 1) return;
+    this.currentPage = 1;
+    this.employees = this.business?.employees
+      .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
+  }
+
+  lastPage() {
+    if (this.currentPage === this.totalPages) return;
+    this.currentPage = this.totalPages;
+    this.employees = this.business?.employees
+      .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
+  }
+
+  prevPage() {
+    if (this.currentPage === 1) return;
+    this.currentPage = this.currentPage - 1;
+    this.employees = this.business?.employees
+      .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
+  }
+
+  nextPage() {
+    if (this.currentPage === this.totalPages) return;
+    this.currentPage = this.currentPage + 1;
+    this.employees = this.business?.employees
+      .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
+  }
+
+  itemsPerPageChangeHandler(value: number) {
+    this.itemsPerPage = value;
+    this.currentPage = 1;
+    this.employeeCount = this.business?.employees.length ?? 0;
+    this.totalPages = Math.ceil(this.employeeCount / this.itemsPerPage) || 1;
+    this.employees = this.business?.employees
+      .slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage) ?? []
+  }
 
   openAddEmployeeForm() {
     this.dialog.open(AddEmployeeComponent, {

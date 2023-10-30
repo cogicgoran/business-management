@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { BusinessService } from '../services/business.service';
 import { IBusiness } from '../services/business.interface';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
