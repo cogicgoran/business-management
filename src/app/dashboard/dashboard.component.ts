@@ -8,7 +8,6 @@ import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -28,6 +27,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   articlesPerPage = 3;
   totalPages = 1;
   businessesCount = 0;
+
 
   constructor(private businessService: BusinessService, private router: Router) { }
 
@@ -64,6 +64,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
   prevPage() {
     if (this.currentPage === 1) return;
     this.currentPage = this.currentPage - 1;
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
+    .map((business) => {
+      return {
+        id: business.id,
+        name: business.name,
+        numberOfEmployees: business.employees.length
+      }
+    });
+  }
+
+  firstPage() {
+    if (this.currentPage === 1) return;
+    this.currentPage = 1;
+    this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
+    .map((business) => {
+      return {
+        id: business.id,
+        name: business.name,
+        numberOfEmployees: business.employees.length
+      }
+    });
+  }
+
+  lastPage() {
+    if (this.currentPage === this.totalPages) return;
+    this.currentPage = this.totalPages;
     this.businesses = this.businessService.myBusinesses.value.slice((this.currentPage - 1) * this.articlesPerPage, this.currentPage * this.articlesPerPage)
     .map((business) => {
       return {
