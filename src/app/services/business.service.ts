@@ -25,7 +25,6 @@ export class BusinessService {
       employees: [],
     }
     const businesses = this.myBusinesses.value;
-    console.log(businesses)
     const updatedBusinesses = [...businesses, business];
     this.myBusinesses.next(updatedBusinesses);
     this.storageService.save(this.storageKey, updatedBusinesses);
