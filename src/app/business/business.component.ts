@@ -17,7 +17,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   templateUrl: './business.component.html',
   styleUrls: ['./business.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, DatePipe, CurrencyPipe,MatNativeDateModule, MatDatepickerModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, DatePipe, CurrencyPipe, MatNativeDateModule, MatDatepickerModule],
   providers: [MatDatepickerModule]
 })
 export class BusinessComponent implements OnInit, OnDestroy {
@@ -26,26 +26,33 @@ export class BusinessComponent implements OnInit, OnDestroy {
   displayedColumns = ['name', 'dateOfBirth', 'role', 'phone', 'salary', 'delete'];
   business: IBusiness | undefined;
   showAddEmployeeForm = false;
+  businessesSubscription!: Subscription;
+  businessId: string | null = null;
 
   constructor(private businessService: BusinessService, private route: ActivatedRoute, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.routerSubscription = this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      this.business = this.businessService.getBusiness(paramMap.get('businessId')!)
+      this.businessId = paramMap.get('businessId');
+    });
+    this.businessesSubscription = this.businessService.myBusinessObservable.subscribe((data) => {
+      this.business = this.businessService.getBusiness(data, this.businessId!);
+    })
+  }
+
+
+  openAddEmployeeForm() {
+    this.dialog.open(AddEmployeeComponent, {
+      data: this.business
     });
   }
 
-  openAddEmployeeForm() {
-      this.dialog.open(AddEmployeeComponent, {
-        data: this.business
-      });
-  }
-
   removeEmployee(businessId: IBusiness['id'], employeeId: IEmployee['id']) {
-      this.businessService.removeEmployee(businessId, employeeId);
+    this.businessService.removeEmployee(businessId, employeeId);
   }
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
+    this.businessesSubscription.unsubscribe();
   }
 }

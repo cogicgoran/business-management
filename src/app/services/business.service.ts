@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { IBusiness, IEmployee } from './business.interface';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { StorageService } from '../storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BusinessService {
-  myBusinesses: Array<IBusiness> = [];
+  // myBusinesses: Array<IBusiness> = [];
+  myBusinesses = new BehaviorSubject<Array<IBusiness>>([]);
+  myBusinessObservable = this.myBusinesses.asObservable();
+  storageKey = 'businesses';
 
-  constructor() {
-    const businessesStringified = window.localStorage.getItem('businesses')
-    this.myBusinesses = businessesStringified ? JSON.parse(businessesStringified) : [];
+  constructor(private storageService: StorageService) {
+    const businesses = storageService.get<Array<IBusiness>>(this.storageKey) ?? [];
+    this.myBusinesses.next(businesses);
   }
 
   addBusiness(businessData: { businessName: string, businessAddress: string }) {
@@ -19,30 +24,55 @@ export class BusinessService {
       address: businessData.businessAddress,
       employees: [],
     }
-    this.myBusinesses = [...this.myBusinesses, business];
-    this.saveToStorage();
+    const businesses = this.myBusinesses.value;
+    console.log(businesses)
+    const updatedBusinesses = [...businesses, business];
+    this.myBusinesses.next(updatedBusinesses);
+    this.storageService.save(this.storageKey, updatedBusinesses);
   }
 
-  getBusiness(businessId: string) {
-    return this.myBusinesses.find((business) => { return business.id === businessId })
+  removeBusiness(businessIdToRemove: IBusiness['id']) {
+    const updatedBusinesses = this.myBusinesses.value.filter((business) => { return business.id !== businessIdToRemove })
+    this.myBusinesses.next(updatedBusinesses);
+    this.storageService.save(this.storageKey, updatedBusinesses);
+  }
+
+  getBusiness(businesses: Array<IBusiness>, businessId: string) {
+    return businesses.find((business) => { return business.id === businessId })
   }
 
   addEmployee(businessId: string, employeeData: Omit<IEmployee, 'id'>) {
-    const business = this.getBusiness(businessId);
+    const business = this.getBusiness(this.myBusinesses.value, businessId)!;
     if (!business) throw new Error('Error adding employee.'); // Should never come to this case
-    const employee: IEmployee = { ...employeeData, id: Math.floor(Math.random() * 10000).toString() }
-    business.employees = [employee, ...business.employees]
-    this.saveToStorage();
+    const newBusiness = JSON.parse(JSON.stringify(business)) as IBusiness;
+    const idx = this.myBusinesses.value.indexOf(business);
+    const employee: IEmployee = { ...employeeData, id: Math.floor(Math.random() * 10000).toString() };
+    newBusiness.employees = [employee, ...business.employees];
+    const updatedBusinesses = [...this.myBusinesses.value];
+    const newValue = [
+      ...updatedBusinesses.slice(0, idx),
+      newBusiness,
+      ...updatedBusinesses.slice(idx + 1)
+    ]
+    this.myBusinesses.next(newValue);
+    this.storageService.save(this.storageKey, newValue);
   }
 
   removeEmployee(businessId: IBusiness['id'], employeeId: IEmployee['id']) {
-    const business = this.getBusiness(businessId);
+    const business = this.getBusiness(this.myBusinesses.value ,businessId);
     if (!business) throw new Error('Error removing employee.'); // Should never come to this case
-    business.employees = business.employees.filter((employee) => { return employee.id !== employeeId })
-    this.saveToStorage()
+    const newBusiness = JSON.parse(JSON.stringify(business)) as IBusiness;
+    const idx = this.myBusinesses.value.indexOf(business);
+    newBusiness.employees = business.employees.filter((employee) => { return employee.id !== employeeId })
+    const updatedBusinesses = [...this.myBusinesses.value];
+    const newValue = [
+      ...updatedBusinesses.slice(0, idx),
+      newBusiness,
+      ...updatedBusinesses.slice(idx + 1)
+    ]
+    this.myBusinesses.next(newValue);
+    this.storageService.save(this.storageKey, newValue);
   }
 
-  saveToStorage() {
-    window.localStorage.setItem('businesses', JSON.stringify(this.myBusinesses))
-  }
+
 }
