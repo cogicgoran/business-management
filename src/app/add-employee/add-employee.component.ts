@@ -10,13 +10,15 @@ import { BusinessService } from '../services/business.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IBusiness, IEmployee } from '../services/business.interface';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
+import { parse, isValid } from 'date-fns';
 
 @Component({
   selector: 'app-add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule]
+  imports: [CommonModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatDateFnsModule]
 })
 export class AddEmployeeComponent {
   form = new FormGroup({
@@ -30,7 +32,7 @@ export class AddEmployeeComponent {
   constructor(
     public dialogRef: MatDialogRef<AddEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public business: IBusiness,
-    private businessService: BusinessService
+    private businessService: BusinessService,
   ) { }
 
   addEmployee() {
@@ -41,7 +43,8 @@ export class AddEmployeeComponent {
 }
 
 function validateDate(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+  return (control: AbstractControl<string>): ValidationErrors | null => {
+    console.log(isValid(control.value))
     return null;
     // return forbidden ? {forbiddenName: {value: control.value}} : null;
   };
