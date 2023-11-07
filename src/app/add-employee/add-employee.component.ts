@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class AddEmployeeComponent {
   form = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),
-    dateOfBirth: new FormControl<Date>(null!, { validators: [Validators.required] }),
+    dateOfBirth: new FormControl<Date>(null!, { validators: [Validators.required, validateDate()] }),
     role: new FormControl('', { validators: [Validators.required] }),
     phoneNumber: new FormControl('', { validators: [Validators.required] }),
     salary: new FormControl(0, { validators: [Validators.required] }),
@@ -38,4 +38,11 @@ export class AddEmployeeComponent {
     this.businessService.addEmployee(this.business.id, this.form.value as IEmployee);
     this.dialogRef.close();
   }
+}
+
+function validateDate(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return null;
+    // return forbidden ? {forbiddenName: {value: control.value}} : null;
+  };
 }
