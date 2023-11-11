@@ -1,17 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { BusinessService } from '../services/business.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IBusiness, IEmployee } from '../services/business.interface';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
-import { parse, isValid } from 'date-fns';
+import { CustomValidators } from '../validators/date-validator';
 
 @Component({
   selector: 'app-add-employee',
@@ -23,7 +22,7 @@ import { parse, isValid } from 'date-fns';
 export class AddEmployeeComponent {
   form = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),
-    dateOfBirth: new FormControl<Date>(null!, { validators: [Validators.required, validateDate()] }),
+    dateOfBirth: new FormControl<Date | null>(null, { validators: [Validators.required, CustomValidators.dateValidator] }),
     role: new FormControl('', { validators: [Validators.required] }),
     phoneNumber: new FormControl('', { validators: [Validators.required] }),
     salary: new FormControl(0, { validators: [Validators.required] }),
@@ -40,12 +39,4 @@ export class AddEmployeeComponent {
     this.businessService.addEmployee(this.business.id, this.form.value as IEmployee);
     this.dialogRef.close();
   }
-}
-
-function validateDate(): ValidatorFn {
-  return (control: AbstractControl<string>): ValidationErrors | null => {
-    console.log(isValid(control.value))
-    return null;
-    // return forbidden ? {forbiddenName: {value: control.value}} : null;
-  };
 }
