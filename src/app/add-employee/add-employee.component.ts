@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IBusiness, IEmployee } from '../services/business.interface';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
-import { CustomValidators } from '../validators/date-validator';
+import { CustomValidators } from '../validators/custom-validators';
 
 @Component({
   selector: 'app-add-employee',
