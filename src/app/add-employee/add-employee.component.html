@@ -15,6 +15,12 @@
                 <mat-label>Date of birth</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Date of birth" formControlName="dateOfBirth">
                 <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-error *ngIf="form.controls.dateOfBirth.hasError('invalidDate')">
+                    {{ form.controls.dateOfBirth.getError('invalidDate') }}
+                </mat-error>
+                <mat-error *ngIf="form.controls.dateOfBirth.hasError('required')">
+                    {{ form.controls.dateOfBirth.getError('required') }}
+                </mat-error>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
